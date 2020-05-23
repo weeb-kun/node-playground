@@ -1,0 +1,22 @@
+{
+  "name": "nodetest",
+  "version": "1.0.0",
+  "description": "testing for node",
+  "main": "app.js",
+  "scripts": {
+    "test": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weeb-kun/node-playground.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/weeb-kun/node-playground/issues"
+  },
+  "homepage": "https://github.com/weeb-kun/node-playground#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
