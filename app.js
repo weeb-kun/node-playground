@@ -14,6 +14,21 @@
    limitations under the License.
 */
 
-const app = require("express");
+const express = require("express");
+const client = require("twilio")("ACeb8ba37f4f37774e9267194c88ab19b6", "46a19ddaae2df52f4ebac2d536c45d3b");
+const Twiml = require("twilio").twiml.MessagingResponse;
+
+const app = express();
+
+app.get("/", (req, res) => {
+    res.send("whatsapp://send?phone=+14155238886");
+});
+
+app.post("/whatsapp", (req, res) => {
+    const twiml = new Twiml();
+    twiml.message("hello from cgradestogo.");
+    res.writeHead(200, {"content-Type": "text/xml"});
+    res.end(twiml.toString());
+});
 
 app.listen(5000, () => console.log("server started on port 5000"));
