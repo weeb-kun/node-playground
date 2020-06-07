@@ -18,6 +18,7 @@ const express = require("express");
 //const client = require("twilio")("", "");
 //const Twiml = require("twilio").twiml.MessagingResponse;
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
 const passport = require("passport");
 const User = require("./models/User");
 const exphbs = require("express-handlebars");
@@ -25,6 +26,8 @@ const cookieSession = require("cookie-session");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+const bcrypt = require("bcryptjs");
+const db = require("./db/db");
 
 const app = express();
 
@@ -55,13 +58,27 @@ passport.use(new GoogleStrategy({
     passReqToCallback: true
 },
 (request, accessToken, refreshToken, profile, done) => {
-    User.findOrCreate({where: {id: profile.id}, defaults: {id: profile.id}})
-    .then(([user, created]) => {
-        console.log(user);
-        console.log(created);
-        return done(null, user)});
+    User.findOrCreate({where: {id: profile.id}, defaults: {id: profile.id, email: profile.email}})
+    .then(([user, created]) => {return done(null, user)});
 }
 ));
+
+passport.use(new LocalStrategy({usernameField: "email"}, (email, password, done) => {
+    User.findOne({where: {email}})
+        .then(user => {
+            if(!user){
+                return done(null, false, {message: "no user found."});
+            }
+            bcrypt.compare(password, user.password, (err, match) => {
+                if (err) throw err;
+                if(match){
+                    return done(null, user);
+                } else {
+                    return done(null, false, {message: "password incorrect."});
+                }
+            });
+        })
+}));
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -71,6 +88,15 @@ passport.deserializeUser((id, done) => {
     User.findByPk(id)
     .then(user => done(null, user));
 });
+
+(() => {
+    db.authenticate()
+    .then(() => {
+        db.sync({
+            force: false
+        }).then(() => {console.log("database synced")})
+    }).catch(err => console.log(err));
+})();
 
 app.get("/", (req, res) => {
     res.sendStatus(200);
@@ -102,5 +128,7 @@ app.get("/auth/google/success", (req, res) => {
 app.get("/auth/google/failure", (req, res) => {
     res.sendStatus(400);
 });
+
+app.use("/user", require("./routes/user"));
 
 app.listen(5000, () => console.log("server started on port 5000"));

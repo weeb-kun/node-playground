@@ -1,0 +1,12 @@
+<div>
+    <h1>Reset Password</h1>
+    <form action="/user/reset/{{token}}" method="post">
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password">
+
+    <label for="confirm">Confirm Password:</label>
+    <input type="password" name="confirm" id="confirm">
+
+    <input type="submit" value="Reset">
+    </form>
+</div>
