@@ -15,8 +15,8 @@
 */
 
 const express = require("express");
-const client = require("twilio")("ACeb8ba37f4f37774e9267194c88ab19b6", "46a19ddaae2df52f4ebac2d536c45d3b");
-const Twiml = require("twilio").twiml.MessagingResponse;
+//const client = require("twilio")("", "");
+//const Twiml = require("twilio").twiml.MessagingResponse;
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
 const passport = require("passport");
 const User = require("./models/User");
@@ -56,31 +56,32 @@ passport.use(new GoogleStrategy({
 },
 (request, accessToken, refreshToken, profile, done) => {
     User.findOrCreate({where: {id: profile.id}, defaults: {id: profile.id}})
-    .then((user, created) => {return done(null, user)});
+    .then(([user, created]) => {
+        console.log(user);
+        console.log(created);
+        return done(null, user)});
 }
 ));
 
 passport.serializeUser((user, done) => {
-
     done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
-    console.log("deserializing");
-    User.findByPK(id)
+    User.findByPk(id)
     .then(user => done(null, user));
 });
 
 app.get("/", (req, res) => {
-    res.send("whatsapp://send?phone=+14155238886");
+    res.sendStatus(200);
 });
 
-app.post("/whatsapp", (req, res) => {
-    const twiml = new Twiml();
-    twiml.message("hello from cgradestogo.");
-    res.writeHead(200, {"content-Type": "text/xml"});
-    res.end(twiml.toString());
-});
+// app.post("/whatsapp", (req, res) => {
+//     const twiml = new Twiml();
+//     twiml.message("hello from cgradestogo.");
+//     res.writeHead(200, {"content-Type": "text/xml"});
+//     res.end(twiml.toString());
+// });
 
 app.get("/auth/google", (req, res, next) => {
     passport.authenticate("google", { scope: ["profile",
@@ -96,6 +97,10 @@ app.get("/auth/google/callback", (req, res, next) => {
 
 app.get("/auth/google/success", (req, res) => {
     res.send(req.user.id);
+});
+
+app.get("/auth/google/failure", (req, res) => {
+    res.sendStatus(400);
 });
 
 app.listen(5000, () => console.log("server started on port 5000"));
