@@ -23,6 +23,7 @@ const router = express.Router();
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const {Op} = require("sequelize");
+const nexmo = require("../config/nexmo");
 
 router.route("/register")
 .get((req, res) => res.render("register"))
@@ -31,25 +32,47 @@ router.route("/register")
         .then(user => {
             if(user){
                 res.render("user/register", {
-                    error: user.email + " already registered",
-                    email: req.body.email,
-                    password: req.body.password
+                    error: user.email + " already registered"
                 });
             } else {
-                bcrypt.genSalt(10, (err, salt) => {
-                    bcrypt.hash(req.body.password, salt, (err, hash) => {
-                        User.create({ id: uuid.v4(),  email: req.body.email, password: hash})
-                        .then(user => {
-                            res.redirect("/user/login");
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            res.sendStatus(500);
+                nexmo.verify.request({
+                    number: req.body.phone,
+                    brand: "CGradesToGo",
+                    code_length: "6"
+                }, (err, result) => {
+                    bcrypt.genSalt(10, (err, salt) => {
+                        bcrypt.hash(req.body.password, salt, (err, hash) => {
+                            User.create({ id: uuid.v4(),  email: req.body.email, password: hash, phone: req.body.phone})
+                            .then(user => {
+                                res.redirect(`/user/verifyPhone/${result.request_id}`);
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                res.sendStatus(500);
+                            });
                         });
-                    })
-                })
+                    });
+                });
             }
-        })
+        });
+});
+
+router.route("/verifyPhone/:id")
+.get((req, res) => {
+    res.render("verifyPhone", {id: req.params.id});
+})
+.post((req, res) => {
+    nexmo.verify.check({
+        request_id: req.params.id,
+        code: req.body.code
+    }, (err, result) => {
+        if(result.status === "0"){
+            res.redirect("/user/login");
+        } else {
+            console.log(result);
+            res.sendStatus(400);
+        }
+    })
 });
 
 router.route("/login")
