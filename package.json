@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/weeb-kun/node-playground#readme",
   "dependencies": {
+    "@handlebars/allow-prototype-access": "^1.0.3",
     "async": "^3.2.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -24,7 +25,9 @@
     "cookie-session": "^1.4.0",
     "express": "^4.17.1",
     "express-handlebars": "^4.0.4",
+    "express-paginatorjs": "^1.0.1",
     "express-session": "^1.17.1",
+    "handlebars": "^4.7.6",
     "mysql2": "^2.1.0",
     "nexmo": "^2.6.0",
     "nodemailer": "^6.4.8",

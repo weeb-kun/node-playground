@@ -1,0 +1,12 @@
+<div>
+    <h1>Display Users</h1>
+    {{#each users}}
+    <div>
+        <p>{{id}}</p>
+        <p>{{email}}</p>
+        <p>{{phone}}</p>
+    </div>
+    {{/each}}
+    {{#paginate paginator}}
+    {{/paginate}}
+</div>

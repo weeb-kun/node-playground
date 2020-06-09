@@ -28,10 +28,18 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const db = require("./db/db");
+const handlebars = require("handlebars"),
+{allowInsecurePrototypeAccess} = require("@handlebars/allow-prototype-access");
 
 const app = express();
 
-app.engine("handlebars", exphbs({defaultLayout:"main"}));
+app.engine("handlebars", exphbs({
+    defaultLayout:"main",
+    handlebars: allowInsecurePrototypeAccess(handlebars),
+    helpers:{
+        paginate: require("express-paginatorjs")
+    }
+}));
 app.set("view engine", "handlebars");
 
 app.use(bodyParser.urlencoded({extended:false}));

@@ -152,4 +152,15 @@ router.route("/reset/:token")
     })
 });
 
+function paginate(model){
+    return async (req, res, next) => {
+        res.results =  await model.findAll({limit: parseInt(req.query.limit), offset: (parseInt(req.query.page) - 1) * parseInt(req.query.limit)});
+        next();
+    }
+}
+
+// router.get("/", paginate(User), (req, res) => {
+//     res.render("user/users", {users: res.results, paginator: {limit: parseInt(req.query.limit), defaultPage: "user", currentPage: parseInt(req.query.page), totalPages: 20}});
+// });
+
 module.exports = router;
