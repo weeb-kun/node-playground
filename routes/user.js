@@ -154,13 +154,16 @@ router.route("/reset/:token")
 
 function paginate(model){
     return async (req, res, next) => {
-        res.results =  await model.findAndCountAll({limit: parseInt(req.query.limit), offset: (parseInt(req.query.page) - 1) * parseInt(req.query.limit)});
+        req.query.page = parseInt(req.query.page);
+        req.query.limit = parseInt(req.query.limit);
+        res.results =  await model.findAndCountAll({limit: req.query.limit, offset: (req.query.page - 1) * req.query.limit});
         next();
     }
 }
 
 router.get("/", paginate(User), (req, res) => {
-    res.render("user/users", {users: res.results.rows, paginator: {limit: Math.ceil(res.results.count / parseInt(req.query.limit)), defaultPage: "user", currentPage: parseInt(req.query.page), totalPages: Math.ceil(res.results.count / parseInt(req.query.limit))}});
+    var numPages = Math.ceil(res.results.count / req.query.limit);
+    res.render("user/users", {users: res.results.rows, paginator: {limit: numPages, defaultPage: "user", currentPage: req.query.page, totalPages: numPages, lmt: req.query.limit}});
 });
 
 module.exports = router;

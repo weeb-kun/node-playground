@@ -9,13 +9,21 @@
     {{/each}}
     <ul class="pagination">
         {{#paginate paginator type="prev"}}
-            <li class="page-item"> <a href="/user/?page={{prev}}&limit=3" class="page-link">Prev</a></li>
+            <li class="page-item"><a href="/user/?page={{prev}}&limit={{lmt}}" class="page-link">Prev</a></li>
         {{/paginate}}
         {{#paginate paginator type="links"}}
-            <li class="page-item {{#if active}}active{{/if}}"><a href="/user?page={{href}}&limit=3" class="page-link">{{n}}</a></li>
+            <li class="page-item {{#if active}}active{{/if}}"><a href="/user?page={{href}}&limit={{lmt}}" class="page-link">{{n}}</a></li>
         {{/paginate}}
         {{#paginate paginator type="next"}}
-            <li class="page-item"> <a href="/user/?page={{next}}&limit=3" class="page-link">Next</a></li>
+            <li class="page-item"><a href="/user/?page={{next}}&limit={{lmt}}" class="page-link">Next</a></li>
         {{/paginate}}
     </ul>
+    <p>Number of users per page</p>
+    <a href="/user?page=1&limit=3">3</a>
+    <a href="/user?page=1&limit=4">4</a>
+    <a href="/user?page=1&limit=5">5</a>
+    <a href="/user?page=1&limit=10">10</a>
+    <a href="/user?page=1&limit=20">20</a>
+    <a href="/user?page=1&limit=50">50</a>
+    <a href="/user?page=1&limit=100">100</a>
 </div>
