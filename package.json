@@ -25,6 +25,7 @@
     "cookie-session": "^1.4.0",
     "express": "^4.17.1",
     "express-handlebars": "^4.0.4",
+    "express-paginate": "^1.0.0",
     "express-paginatorjs": "^1.0.1",
     "express-session": "^1.17.1",
     "handlebars": "^4.7.6",

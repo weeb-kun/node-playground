@@ -7,6 +7,15 @@
         <p>{{phone}}</p>
     </div>
     {{/each}}
-    {{#paginate paginator}}
-    {{/paginate}}
+    <ul class="pagination">
+        {{#paginate paginator type="prev"}}
+            <li class="page-item"> <a href="/user/?page={{prev}}&limit=3" class="page-link">Prev</a></li>
+        {{/paginate}}
+        {{#paginate paginator type="links"}}
+            <li class="page-item {{#if active}}active{{/if}}"><a href="/user?page={{href}}&limit=3" class="page-link">{{n}}</a></li>
+        {{/paginate}}
+        {{#paginate paginator type="next"}}
+            <li class="page-item"> <a href="/user/?page={{next}}&limit=3" class="page-link">Next</a></li>
+        {{/paginate}}
+    </ul>
 </div>

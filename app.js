@@ -30,6 +30,7 @@ const bcrypt = require("bcryptjs");
 const db = require("./db/db");
 const handlebars = require("handlebars"),
 {allowInsecurePrototypeAccess} = require("@handlebars/allow-prototype-access");
+const paginator = require("express-paginate");
 
 const app = express();
 
@@ -55,6 +56,8 @@ app.use(session({
     resave:false,
     saveUninitialized: false
 }));
+
+app.use(paginator.middleware());
 
 app.use(passport.initialize());
 app.use(passport.session());
