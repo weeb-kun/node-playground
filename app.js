@@ -141,5 +141,6 @@ app.get("/auth/google/failure", (req, res) => {
 });
 
 app.use("/user", require("./routes/user"));
+app.use("/help", require("./routes/help"));
 
 app.listen(5000, () => console.log("server started on port 5000"));
