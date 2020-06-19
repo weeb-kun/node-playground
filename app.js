@@ -63,8 +63,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new GoogleStrategy({
-    clientID: "844416465405-l9dkr6e85svadu9hj3tshj23p3urjd2v.apps.googleusercontent.com",
-    clientSecret: "B5cUM_DtRbEmmQgG2da2y3Xw",
+    clientID: process.env.authId,
+    clientSecret: process.env.authSecret,
     callbackURL: "http://localhost:5000/auth/google/callback",
     passReqToCallback: true
 },
