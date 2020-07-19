@@ -14,11 +14,11 @@
    limitations under the License.
 */
 
-// const Nexmo = require("nexmo");
+const Nexmo = require("nexmo");
 
-// const nexmo = new Nexmo({
-//     apiKey: process.env.nexmoKey,
-//     apiSecret: process.env.nexmoSecret
-// });
+const nexmo = new Nexmo({
+    apiKey: process.env.nexmoKey,
+    apiSecret: process.env.nexmoSecret
+});
 
-// module.exports = nexmo;
+module.exports = nexmo;
